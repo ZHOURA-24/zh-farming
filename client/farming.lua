@@ -223,7 +223,7 @@ CreateThread(function()
     while true do
         local sleep = 1000
         local coordPed = GetEntityCoords(cache.ped)
-        for k, v in ipairs(farms) do
+        for k, v in pairs(farms) do
             local check = CheckPlantTest(k)
             local stage = CheckStage(k)
             local coordsObject = v.coords
@@ -351,9 +351,9 @@ end)
 
 AddEventHandler('onResourceStop', function(resource)
     if resource == GetCurrentResourceName() then
-        for i = 1, #clientFarm do
-            if DoesEntityExist(clientFarm[i].object) then
-                DeleteEntity(clientFarm[i].object)
+        for _, v in pairs(clientFarm) do
+            if DoesEntityExist(v.object) then
+                DeleteEntity(v.object)
             end
         end
     end

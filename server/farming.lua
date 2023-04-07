@@ -1,38 +1,34 @@
 local serverPlant = {}
 local dataFarm = Config.Farming
 
-RegisterNetEvent('zh-farming:server:AddNewPlant', function(key, offset)
-    local plant = dataFarm.seeds[key]
-    local index = #serverPlant + 1
-    serverPlant[index] = {
-        name = key,
+RegisterNetEvent('zh-farming:server:AddNewPlant', function(name, offset)
+    local plant = dataFarm.seeds[name]
+    local key = os.time()
+    serverPlant[key] = {
+        name = name,
         stage = 'a',
         laststage = plant.laststage,
         coords = offset,
         progress = 0,
         water = 50
     }
-    TriggerClientEvent('zh-farming:client:NewFarm', -1, index, key, 'a', plant.laststage, offset, 0, 50)
+    TriggerClientEvent('zh-farming:client:NewFarm', -1, key, name, 'a', plant.laststage, offset, 0, 50)
 end)
 
 CreateThread(function()
     while true do
-        for i = 1, #serverPlant do
-            if serverPlant[i] ~= nil then
-                if serverPlant[i].stage ~= serverPlant[i].laststage then
-                    serverPlant[i].progress = serverPlant[i].progress + Config.Progress
-                    serverPlant[i].water = serverPlant[i].water - Config.Water
-                    if serverPlant[i].progress >= 100 then
-                        serverPlant[i].progress = 0
-                        if serverPlant[i].stage == 'a' then
-                            serverPlant[i].stage = 'b'
-                        elseif serverPlant[i].stage == 'b' then
-                            serverPlant[i].stage = 'c'
-                        elseif serverPlant[i].stage == 'c' then
-                            serverPlant[i].stage = 'd'
-                        elseif serverPlant[i].stage == 'd' then
-                            serverPlant[i].stage = 'e'
-                        end
+        for _, v in pairs(serverPlant) do
+            if v.stage ~= v.laststage then
+                v.progress = v.progress + Config.Progress
+                v.water = v.water - Config.Water
+                if v.progress >= 100 then
+                    v.progress = 0
+                    if v.stage == 'a' then
+                        v.stage = 'b'
+                    elseif v.stage == 'b' then
+                        v.stage = 'c'
+                    elseif v.stage == 'c' then
+                        v.stage = 'd'
                     end
                 end
             end
