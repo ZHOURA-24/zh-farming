@@ -9,6 +9,7 @@ Config.Farming = {
     seeds = {
         -- item name
         pineapple = {
+            label = 'Pineapple',
             stage = {
                 -- stage update plant
                 a = 'prop_plant_fern_01a',
@@ -18,6 +19,7 @@ Config.Farming = {
             laststage = 'c', -- last stage harvest plant
         },
         pumpkin = {
+            label = 'Pumpkin',
             stage = {
                 a = 'prop_plant_fern_01a',
                 b = 'prop_plant_fern_01b',
@@ -26,6 +28,7 @@ Config.Farming = {
             laststage = 'c',
         },
         cabbage = {
+            label = 'Cabbage',
             stage = {
                 a = 'prop_plant_fern_01a',
                 b = 'prop_plant_fern_01b',

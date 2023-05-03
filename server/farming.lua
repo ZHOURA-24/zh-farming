@@ -9,15 +9,15 @@ RegisterNetEvent('zh-farming:server:AddNewPlant', function(name, offset)
         stage = 'a',
         laststage = plant.laststage,
         coords = offset,
-        progress = 0,
+        progress = 10,
         water = 50
     }
-    TriggerClientEvent('zh-farming:client:NewFarm', -1, key, name, 'a', plant.laststage, offset, 0, 50)
+    TriggerClientEvent('zh-farming:client:NewFarm', -1, key, name, 'a', plant.laststage, offset, 10, 50)
 end)
 
 CreateThread(function()
     while true do
-        for _, v in pairs(serverPlant) do
+        for k, v in pairs(serverPlant) do
             if v.stage ~= v.laststage then
                 v.progress = v.progress + Config.Progress
                 v.water = v.water - Config.Water
@@ -31,9 +31,15 @@ CreateThread(function()
                         v.stage = 'd'
                     end
                 end
+                TriggerClientEvent('zh-farming:client:UpdatePlant', -1, k, 'water', v.water)
+                Wait(100)
+                TriggerClientEvent('zh-farming:client:UpdatePlant', -1, k, 'fertilizer', v.progress)
+                Wait(100)
+                TriggerClientEvent('zh-farming:client:UpdatePlant', -1, k, 'stage', v.stage)
+                Wait(100)
             end
         end
-        TriggerClientEvent('zh-farming:client:UpdateAllPlant', -1, serverPlant)
+        -- TriggerClientEvent('zh-farming:client:UpdateAllPlant', -1, serverPlant)
         Wait(60 * 1000 * Config.Update)
     end
 end)

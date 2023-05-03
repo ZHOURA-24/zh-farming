@@ -1,15 +1,6 @@
 local farms = {}
 local clientFarm = {}
 local dataFarm = Config.Farming
-local task = false
-
-local function GetGroundHash(ped)
-    local pedPosition = GetEntityCoords(ped)
-    local num = StartShapeTestCapsule(pedPosition.x, pedPosition.y, pedPosition.z + 4, pedPosition.x, pedPosition.y,
-        pedPosition.z - 2.0, 2, 1, ped, 7)
-    local arg1, arg2, arg3, arg4, arg5 = GetShapeTestResultEx(num)
-    return arg5
-end
 
 local function PlayEffect(dict, particleName, entity, off, rot, time, cb)
     CreateThread(function()
@@ -28,9 +19,11 @@ local function PlayEffect(dict, particleName, entity, off, rot, time, cb)
 end
 
 local function PlantAction(key, type)
-    task = true
+    busy = true
     lib.hideContext(false)
     local playerCoords = GetEntityCoords(cache.ped)
+    TaskTurnPedToFaceEntity(cache.ped, clientFarm[key].object, 1000)
+    Wait(1000)
     if type == 'water' then
         local object = CreateObject('prop_wateringcan', playerCoords.x, playerCoords.y, playerCoords.z, true, true, true)
         local boneIndex = GetPedBoneIndex(cache.ped, 0x8CBD)
@@ -103,7 +96,7 @@ local function PlantAction(key, type)
             TriggerServerEvent('zh-farming:server:ActionPlant', key, type)
         end
     end
-    task = false
+    busy = false
 end
 
 local function CreateMenu(key)
@@ -114,21 +107,33 @@ local function CreateMenu(key)
     end
     lib.registerContext({
         id = 'plants_menu_',
-        title = 'My plant',
+        title = 'Plant Info',
         options = {
             {
-                title = 'Progress : ' .. plant.progress .. '%',
-                icon = 'fas fa-leaf',
+                title = Config.Farming.seeds[plant.name].label,
+                icon = 'tree',
                 iconColor = 'green',
-                progress = plant.progress,
-                colorScheme = 'green'
-            },
-            {
-                title = 'Water : ' .. plant.water .. '%',
-                icon = 'fa fa-tint',
-                iconColor = 'blue',
-                progress = plant.water,
-                colorScheme = 'blue',
+                metadata = {
+                    {
+                        label = 'Current Stage ',
+                        value = plant.stage
+                    },
+                    {
+                        label = 'Last stage ',
+                        value = Config.Farming.seeds[plant.name].laststage,
+                    },
+                    {
+                        label = 'Progress ',
+                        value = plant.progress .. '%',
+                        progress = plant.progress,
+                    },
+                    {
+                        label = 'Water ',
+                        value = plant.water .. '%',
+                        progress = plant.water,
+                    }
+                },
+                image = "nui://ox_inventory/web/images/" .. plant.name .. ".png",
             },
             {
                 title = 'Wash',
@@ -160,8 +165,7 @@ local function CreateMenu(key)
                     end
                     PlantAction(key, 'harvest')
                 end
-            },
-
+            }
         }
     })
     lib.showContext('plants_menu_')
@@ -191,7 +195,7 @@ local CreatePlantFarm = function(key)
             icon = 'fas fa-leaf',
             label = 'Check plant',
             canInteract = function(entity, distance, coords, name, bone)
-                return distance < 2 and not task
+                return distance < 2 and not busy
             end,
             onSelect = function()
                 CreateMenu(key)
@@ -221,7 +225,6 @@ end
 
 CreateThread(function()
     while true do
-        local sleep = 1000
         local coordPed = GetEntityCoords(cache.ped)
         for k, v in pairs(farms) do
             local check = CheckPlantTest(k)
@@ -243,7 +246,7 @@ CreateThread(function()
                 end
             end
         end
-        Wait(sleep)
+        Wait(1000)
     end
 end)
 
@@ -264,7 +267,7 @@ RegisterNetEvent('zh-farming:client:UpdateAllPlant', function(data)
     farms = data
 end)
 
-RegisterNetEvent('zh-farming:client:UpdatePlant', function(key, type, value, stage)
+RegisterNetEvent('zh-farming:client:UpdatePlant', function(key, type, value)
     if type == 'water' then
         farms[key].water = value
     elseif type == 'harvest' then
@@ -274,6 +277,8 @@ RegisterNetEvent('zh-farming:client:UpdatePlant', function(key, type, value, sta
         end
     elseif type == 'fertilizer' then
         farms[key].progress = value
+    elseif type == 'stage' then
+        farms[key].stage = value
     end
 end)
 
@@ -287,28 +292,24 @@ end)
 local function RegisterItems()
     for k, v in pairs(dataFarm.seeds) do
         exports(k, function(data, slot)
-            local playerOffset = GetOffsetFromEntityInWorldCoords(cache.ped, -0.0, 0.6, -0.95)
-            local closestPlant = 0
-            local ground = GetGroundHash(cache.ped)
-            for i = 1, #dataFarm.model do
-                if closestPlant == 0 then
-                    closestPlant = GetClosestObjectOfType(playerOffset.x, playerOffset.y, playerOffset.z, 2.0,
-                        GetHashKey(dataFarm.model[i]), false, false, false)
-                end
+            if busy then
+                return
             end
-            if closestPlant ~= 0 then
-                return Notify('Farming', "Can't place here", 'error')
-            elseif not dataFarm.soil[ground] then
-                return Notify('Farming', "Not soil", 'error')
+            local placeCoords = ObjectControl(v.stage['a'])
+            if placeCoords then
+                busy = true
+                TaskTurnPedToFaceCoord(cache.ped, placeCoords, 1000)
+                Wait(1000)
+                exports.ox_inventory:useItem(data, function(data)
+                    if data then
+                        TaskStartScenarioInPlace(cache.ped, "WORLD_HUMAN_GARDENER_PLANT", 0, 1)
+                        Wait(5000)
+                        ClearPedTasks(cache.ped)
+                        TriggerServerEvent('zh-farming:server:AddNewPlant', k, placeCoords)
+                        busy = false
+                    end
+                end)
             end
-            exports.ox_inventory:useItem(data, function(data)
-                if data then
-                    TaskStartScenarioInPlace(cache.ped, "WORLD_HUMAN_GARDENER_PLANT", 0, 1)
-                    Wait(5000)
-                    ClearPedTasks(cache.ped)
-                    TriggerServerEvent('zh-farming:server:AddNewPlant', k, playerOffset)
-                end
-            end)
         end)
     end
 end
