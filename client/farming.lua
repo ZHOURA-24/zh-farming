@@ -102,7 +102,7 @@ end
 local function CreateMenu(key)
     local plant = farms[key]
     local harvestText = 'Not ready to harvest'
-    if plant.stage == plant.laststage then
+    if plant.stage == plant.last_stage then
         harvestText = 'Ready to harvest'
     end
     lib.registerContext({
@@ -120,7 +120,7 @@ local function CreateMenu(key)
                     },
                     {
                         label = 'Last stage ',
-                        value = Config.Farming.seeds[plant.name].laststage,
+                        value = Config.Farming.seeds[plant.name].last_stage,
                     },
                     {
                         label = 'Progress ',
@@ -160,7 +160,7 @@ local function CreateMenu(key)
                 iconColor = 'red',
                 description = harvestText,
                 onSelect = function()
-                    if plant.stage ~= plant.laststage then
+                    if plant.stage ~= plant.last_stage then
                         return Notify('Farming', "Can't harvest", 'error')
                     end
                     PlantAction(key, 'harvest')
@@ -250,12 +250,12 @@ CreateThread(function()
     end
 end)
 
-RegisterNetEvent('zh-farming:client:NewFarm', function(index, name, stage, laststage, coords, progress, water)
+RegisterNetEvent('zh-farming:client:NewFarm', function(index, name, stage, last_stage, coords, progress, water)
     if farms[index] == nil then
         farms[index] = {
             name = name,
             stage = stage,
-            laststage = laststage,
+            last_stage = last_stage,
             coords = coords,
             progress = progress,
             water = water

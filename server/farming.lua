@@ -7,17 +7,17 @@ RegisterNetEvent('zh-farming:server:AddNewPlant', function(name, offset)
     serverPlant[key] = {
         name = name,
         stage = 'a',
-        laststage = plant.laststage,
+        last_stage = plant.last_stage,
         coords = offset,
         progress = 10,
         water = 50
     }
-    TriggerClientEvent('zh-farming:client:NewFarm', -1, key, name, 'a', plant.laststage, offset, 10, 50)
+    TriggerClientEvent('zh-farming:client:NewFarm', -1, key, name, 'a', plant.last_stage, offset, 10, 50)
 end)
 
 local function UpdateAllPlant()
     for k, v in pairs(serverPlant) do
-        if v.stage ~= v.laststage then
+        if v.stage ~= v.last_stage then
             v.progress = v.progress + Config.Progress
             v.water = v.water - Config.Water
             if v.progress >= 100 then
@@ -47,11 +47,11 @@ CreateThread(function()
 end)
 
 RegisterNetEvent('zh-farming:server:ActionPlant', function(key, type)
-    local random = Config.PlantAction
+    local random = 45
     if type == 'water' then
         serverPlant[key].water = serverPlant[key].water + random
         if serverPlant[key].water >= 100 then
-            serverPlant[key].water = 99
+            serverPlant[key].water = 100
         end
         TriggerClientEvent('zh-farming:client:UpdatePlant', -1, key, type, serverPlant[key].water)
     elseif type == 'harvest' then
@@ -61,7 +61,17 @@ RegisterNetEvent('zh-farming:server:ActionPlant', function(key, type)
     elseif type == 'fertilizer' then
         serverPlant[key].progress = serverPlant[key].progress + random
         if serverPlant[key].progress >= 100 then
-            serverPlant[key].progress = 99
+            serverPlant[key].progress = 0
+            if serverPlant[key].stage ~= serverPlant[key].last_stage then
+                if serverPlant[key].stage == 'a' then
+                    serverPlant[key].stage = 'b'
+                elseif serverPlant[key].stage == 'b' then
+                    serverPlant[key].stage = 'c'
+                elseif serverPlant[key].stage == 'c' then
+                    serverPlant[key].stage = 'd'
+                end
+                TriggerClientEvent('zh-farming:client:UpdatePlant', -1, key, 'stage', serverPlant[key].stage)
+            end
         end
         TriggerClientEvent('zh-farming:client:UpdatePlant', -1, key, type, serverPlant[key].progress)
     end

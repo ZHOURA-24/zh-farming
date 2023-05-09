@@ -1,9 +1,9 @@
 Config = Config or {}
 
-Config.Update = 2                       -- update all plant (proggress , water)
-Config.Progress = math.random(20, 45)   -- add proggress when update plant
-Config.Water = math.random(1, 10)       -- reduce water when update plant
-Config.PlantAction = math.random(1, 30) -- added proggress/water
+Config.Update = 2.5                      -- update all plant (proggress , water)
+Config.Progress = math.random(25, 50)    -- add proggress when update plant
+Config.Water = math.random(1, 10)        -- reduce water when update plant
+Config.PlantAction = math.random(20, 40) -- added proggress/water
 
 Config.Farming = {
     seeds = {
@@ -16,7 +16,7 @@ Config.Farming = {
                 b = 'prop_plant_fern_01b',
                 c = 'prop_pineapple',
             },
-            laststage = 'c', -- last stage harvest plant
+            last_stage = 'c', -- last stage harvest plant
         },
         pumpkin = {
             label = 'Pumpkin',
@@ -25,7 +25,7 @@ Config.Farming = {
                 b = 'prop_plant_fern_01b',
                 c = 'prop_veg_crop_03_pump',
             },
-            laststage = 'c',
+            last_stage = 'c',
         },
         cabbage = {
             label = 'Cabbage',
@@ -34,7 +34,7 @@ Config.Farming = {
                 b = 'prop_plant_fern_01b',
                 c = 'prop_veg_crop_03_cab',
             },
-            laststage = 'c',
+            last_stage = 'c',
         },
     },
     model = { -- model for check clossest object
