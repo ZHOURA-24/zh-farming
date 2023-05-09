@@ -28,6 +28,12 @@ local function UpdateAllPlant()
                     v.stage = 'c'
                 elseif v.stage == 'c' then
                     v.stage = 'd'
+                elseif v.stage == 'd' then
+                    v.stage = 'e'
+                elseif v.stage == 'e' then
+                    v.stage = 'f'
+                elseif v.stage == 'f' then
+                    v.stage = 'g'
                 end
             end
             TriggerClientEvent('zh-farming:client:UpdatePlant', -1, k, 'water', v.water)
@@ -69,6 +75,12 @@ RegisterNetEvent('zh-farming:server:ActionPlant', function(key, type)
                     serverPlant[key].stage = 'c'
                 elseif serverPlant[key].stage == 'c' then
                     serverPlant[key].stage = 'd'
+                elseif serverPlant[key].stage == 'd' then
+                    serverPlant[key].stage = 'e'
+                elseif serverPlant[key].stage == 'e' then
+                    serverPlant[key].stage = 'f'
+                elseif serverPlant[key].stage == 'f' then
+                    serverPlant[key].stage = 'g'
                 end
                 TriggerClientEvent('zh-farming:client:UpdatePlant', -1, key, 'stage', serverPlant[key].stage)
             end

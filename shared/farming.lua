@@ -36,6 +36,19 @@ Config.Farming = {
             },
             last_stage = 'c',
         },
+        weed = {
+            label = 'Weed',
+            stage = {
+                a = "bkr_prop_weed_01_small_01c",
+                b = "bkr_prop_weed_01_small_01b",
+                c = "bkr_prop_weed_01_small_01a",
+                d = "bkr_prop_weed_med_01b",
+                e = "bkr_prop_weed_lrg_01a",
+                f = "bkr_prop_weed_lrg_01b",
+                g = "bkr_prop_weed_lrg_01b"
+            },
+            last_stage = 'g',
+        },
     },
     model = { -- model for check clossest object
         'prop_pineapple',
@@ -70,6 +83,7 @@ Config.Shops = {
         { name = 'pineapple_seed', price = 10 },
         { name = 'pumpkin_seed',   price = 10 },
         { name = 'cabbage_seed',   price = 10 },
+        { name = 'weed_seed',   price = 10,  currency = 'black_money' }
     },
     location = vec3(1967.1213, 4634.3149, 41.1015),
     blip = { id = 514, colour = 2, scale = 0.8, name = 'Shops Farming' },
