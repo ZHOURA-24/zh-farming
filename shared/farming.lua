@@ -12,8 +12,8 @@ Config.Farming = {
             label = 'Pineapple',
             stage = {
                 -- stage update plant
-                a = 'prop_plant_fern_01a',
-                b = 'prop_plant_fern_01b',
+                a = 'v_res_fa_plant01',
+                b = 'v_res_rubberplant',
                 c = 'prop_pineapple',
             },
             last_stage = 'c', -- last stage harvest plant
@@ -21,8 +21,8 @@ Config.Farming = {
         pumpkin = {
             label = 'Pumpkin',
             stage = {
-                a = 'prop_plant_fern_01a',
-                b = 'prop_plant_fern_01b',
+                a = 'v_res_fa_plant01',
+                b = 'v_res_rubberplant',
                 c = 'prop_veg_crop_03_pump',
             },
             last_stage = 'c',
@@ -30,8 +30,8 @@ Config.Farming = {
         cabbage = {
             label = 'Cabbage',
             stage = {
-                a = 'prop_plant_fern_01a',
-                b = 'prop_plant_fern_01b',
+                a = 'v_res_fa_plant01',
+                b = 'v_res_rubberplant',
                 c = 'prop_veg_crop_03_cab',
             },
             last_stage = 'c',
@@ -41,8 +41,8 @@ Config.Farming = {
         'prop_pineapple',
         'prop_veg_crop_03_pump',
         'prop_veg_crop_03_cab',
-        'prop_plant_fern_01a',
-        'prop_plant_fern_01b',
+        'v_res_fa_plant01',
+        'v_res_rubberplant',
     },
     soil = {
         [2409420175] = true,

@@ -51,7 +51,6 @@ function ObjectControl(model)
     busy = true
     lib.requestModel(model)
     local object = CreateObjectNoOffset(model, 1.0, 1.0, 1.0, true, true, false)
-    SetEntityAlpha(object, 150, false)
     SetEntityCollision(object, false, false)
     FreezeEntityPosition(object, true)
     SetEntityDrawOutline(object, true)
@@ -59,11 +58,15 @@ function ObjectControl(model)
     ShowHelp(text, 'top-center', 'arrows', 'blue', 'white')
     while true do
         local hit, entity, endCoords, surfaceNormal, materialHash = lib.raycast.cam(1, 1, 20)
+        DrawLine(GetEntityCoords(cache.ped), endCoords, 255, 255, 255, 255)
         if hit then
             SetEntityCoords(object, endCoords.x, endCoords.y, endCoords.z + 0.1)
         end
         if not Config.Farming.soil[materialHash] then
+            SetEntityDrawOutlineColor(250, 0, 0, 1)
             SetEntityHeading(object, GetEntityHeading(object) + 10.0)
+        else
+            SetEntityDrawOutlineColor(30, 250, 0, 1)
         end
         if IsControlJustPressed(0, 38) then
             if Config.Farming.soil[materialHash] then

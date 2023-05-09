@@ -185,8 +185,9 @@ local CreatePlantFarm = function(key)
     local data = dataFarm.seeds[farm.name]
     local model = data.stage[farm.stage]
     lib.requestModel(model)
-    clientFarm[key].object = CreateObject(GetHashKey(model), farm.coords.x, farm.coords.y, farm.coords.z - 0.1, false,
+    clientFarm[key].object = CreateObject(GetHashKey(model), farm.coords.x, farm.coords.y, farm.coords.z, false,
         false, false)
+    PlaceObjectOnGroundProperly(clientFarm[key].object)
     FreezeEntityPosition(clientFarm[key].object, true)
     clientFarm[key].stage = farm.stage
     local options = {

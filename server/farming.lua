@@ -47,7 +47,7 @@ CreateThread(function()
 end)
 
 RegisterNetEvent('zh-farming:server:ActionPlant', function(key, type)
-    local random = 45
+    local random = Config.PlantAction
     if type == 'water' then
         serverPlant[key].water = serverPlant[key].water + random
         if serverPlant[key].water >= 100 then
