@@ -44,32 +44,6 @@ end
 CreateThread(function()
     Wait(1000)
     UpdateAllPlant()
-    -- while true do
-    --     for k, v in pairs(serverPlant) do
-    --         if v.stage ~= v.laststage then
-    --             v.progress = v.progress + Config.Progress
-    --             v.water = v.water - Config.Water
-    --             if v.progress >= 100 then
-    --                 v.progress = 0
-    --                 if v.stage == 'a' then
-    --                     v.stage = 'b'
-    --                 elseif v.stage == 'b' then
-    --                     v.stage = 'c'
-    --                 elseif v.stage == 'c' then
-    --                     v.stage = 'd'
-    --                 end
-    --             end
-    --             TriggerClientEvent('zh-farming:client:UpdatePlant', -1, k, 'water', v.water)
-    --             Wait(100)
-    --             TriggerClientEvent('zh-farming:client:UpdatePlant', -1, k, 'fertilizer', v.progress)
-    --             Wait(100)
-    --             TriggerClientEvent('zh-farming:client:UpdatePlant', -1, k, 'stage', v.stage)
-    --             Wait(100)
-    --         end
-    --     end
-    --     -- TriggerClientEvent('zh-farming:client:UpdateAllPlant', -1, serverPlant)
-    --     Wait(60 * 1000 * Config.Update)
-    -- end
 end)
 
 RegisterNetEvent('zh-farming:server:ActionPlant', function(key, type)
