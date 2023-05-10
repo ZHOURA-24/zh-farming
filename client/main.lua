@@ -86,3 +86,19 @@ function ObjectControl(model)
         Wait(0)
     end
 end
+
+function PlayEffect(dict, particleName, entity, off, rot, time, cb)
+    CreateThread(function()
+        lib.RequestNamedPtfxAsset(dict)
+        UseParticleFxAssetNextCall(dict)
+        Wait(10)
+        local particleHandle = StartParticleFxLoopedOnEntity(particleName, entity, off.x, off.y, off.z, rot.x, rot.y,
+            rot.z, 1.0)
+        SetParticleFxLoopedColour(particleHandle, 0, 255, 0, 0)
+        Wait(time)
+        StopParticleFxLooped(particleHandle, false)
+        if cb then
+            cb()
+        end
+    end)
+end

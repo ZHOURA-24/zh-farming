@@ -2,22 +2,6 @@ local farms = {}
 local clientFarm = {}
 local dataFarm = Config.Farming
 
-local function PlayEffect(dict, particleName, entity, off, rot, time, cb)
-    CreateThread(function()
-        lib.RequestNamedPtfxAsset(dict)
-        UseParticleFxAssetNextCall(dict)
-        Wait(10)
-        local particleHandle = StartParticleFxLoopedOnEntity(particleName, entity, off.x, off.y, off.z, rot.x, rot.y,
-            rot.z, 1.0)
-        SetParticleFxLoopedColour(particleHandle, 0, 255, 0, 0)
-        Wait(time)
-        StopParticleFxLooped(particleHandle, false)
-        if cb then
-            cb()
-        end
-    end)
-end
-
 local function PlantAction(key, type)
     busy = true
     lib.hideContext(false)

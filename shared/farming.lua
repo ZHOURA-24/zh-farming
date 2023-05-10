@@ -56,6 +56,13 @@ Config.Farming = {
         'prop_veg_crop_03_cab',
         'v_res_fa_plant01',
         'v_res_rubberplant',
+        "bkr_prop_weed_01_small_01c",
+        "bkr_prop_weed_01_small_01b",
+        "bkr_prop_weed_01_small_01a",
+        "bkr_prop_weed_med_01b",
+        "bkr_prop_weed_lrg_01a",
+        "bkr_prop_weed_lrg_01b",
+        "bkr_prop_weed_lrg_01b"
     },
     soil = {
         [2409420175] = true,
@@ -83,7 +90,7 @@ Config.Shops = {
         { name = 'pineapple_seed', price = 10 },
         { name = 'pumpkin_seed',   price = 10 },
         { name = 'cabbage_seed',   price = 10 },
-        { name = 'weed_seed',   price = 10,  currency = 'black_money' }
+        { name = 'weed_seed',      price = 10, currency = 'black_money' }
     },
     location = vec3(1967.1213, 4634.3149, 41.1015),
     blip = { id = 514, colour = 2, scale = 0.8, name = 'Shops Farming' },
