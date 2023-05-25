@@ -1,5 +1,5 @@
 # zh-farming
-
+```
  ["pineapple_seed"] = {
         label = "Pineapple seed",
         weight = 200,
@@ -125,3 +125,4 @@
         weight = 200,
         stack = true,
     },
+    ```
