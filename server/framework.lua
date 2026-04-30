@@ -12,6 +12,11 @@ if Framework.ESX() then
         local Player = ESX.GetPlayerFromId(src)
         Player.removeInventoryItem(item, count)
     end
+
+    function Framework.HasItem(src, item, count)
+        local Player = ESX.GetPlayerFromId(src)
+        return Player.getInventoryItem(item).count >= count
+    end
 end
 
 if Framework.QBCore() then
@@ -25,5 +30,9 @@ if Framework.QBCore() then
     function Framework.RemoveItem(src, item, count)
         local Player = QBCore.Functions.GetPlayer(src)
         Player.Functions.AddItem(item, count)
+    end
+
+    function Framework.HasItem(src, item, count)
+        return QBCore.Functions.HasItem(src, item, count)
     end
 end

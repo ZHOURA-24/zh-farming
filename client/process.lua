@@ -1,14 +1,14 @@
 local objects = {}
 local itemNames = exports.ox_inventory:Items()
 
-local function StartProcess(index, key, items)
+lib.callback.register('zh-farming:client:ProcessItem', function(index, item)
     TaskTurnPedToFaceEntity(cache.ped, objects[index], 1000)
     Wait(1000)
     local progress = Config.Process[index].progress
     PlayEffect(progress.dict_effect, progress.effect, objects[index], progress.effect_pos, vec3(0, 0, 0), 10000)
     if lib.progressBar({
             duration = 10000,
-            label = string.format('Processing %s', itemNames[key].label),
+            label = string.format('Processing %s', itemNames[item].label),
             useWhileDead = false,
             canCancel = true,
             disable = {
@@ -28,15 +28,13 @@ local function StartProcess(index, key, items)
 
         })
     then
-        for k, v in pairs(items) do
-            TriggerServerEvent('zh-farming:server:RemoveItem', k, v)
-        end
-        TriggerServerEvent('zh-farming:server:AddItem', key, 1)
-        Notify('Farming processing', string.format('Success process %s %s', 1, itemNames[key].label), 'success')
+        Notify('Farming processing', string.format('Success process %s %s', 1, itemNames[item].label), 'success')
+        return true
     else
         Notify('Farming processing', 'Cancel', 'error')
+        return false
     end
-end
+end)
 
 local function MenuProcess(index)
     local menus = {}
@@ -52,7 +50,7 @@ local function MenuProcess(index)
                         return Notify('Farming processing', string.format('Do not have %s ', j), 'error')
                     end
                 end
-                StartProcess(index, k, v)
+                TriggerServerEvent("zh-farming:client:ProcessItem", index, k)
             end
         }
     end
@@ -66,8 +64,11 @@ end
 
 CreateThread(function()
     for i = 1, #Config.Process do
-        local object = CreateObject(GetHashKey(Config.Process[i].object), Config.Process[i].coords, false, false, false)
-        SetEntityRotation(object, Config.Process[i].rotation)
+        local coords = Config.Process[i].coords
+        local rotation = Config.Process[i].rotation
+        local object = CreateObject(GetHashKey(Config.Process[i].object), coords.x, coords.y, coords.z, false, false,
+            false)
+        SetEntityRotation(object, rotation.x, rotation.y, rotation.z, 2, true)
         FreezeEntityPosition(object, true)
         objects[#objects + 1] = object
         local options = {
